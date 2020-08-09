@@ -82,6 +82,15 @@ function configureAuthForServer(server) {
   );
 
   server.get(
+    "/signup/shop",
+    (req, res, next) => {
+      req.session.redirectTo = config.ADMIN_URL;
+      next(); // eslint-disable-line promise/no-callback-in-promise
+    },
+    passport.authenticate("oauth2", { loginAction: "shopSignup" })
+  );
+  
+  server.get(
     "/signup",
     (req, res, next) => {
       req.session.redirectTo = req.get("Referer");

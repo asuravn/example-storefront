@@ -37,6 +37,18 @@ fragment CartCommon on Cart {
           region
         }
       }
+      items {
+        _id
+        addedAt
+        price {
+          amount
+        }
+        productConfiguration {
+          productId
+          productVariantId
+        }
+        quantity
+      }
       availableFulfillmentOptions {
         price {
           amount
@@ -65,6 +77,7 @@ fragment CartCommon on Cart {
       }
       shop {
         _id
+        name
       }
       shippingAddress {
         address1

@@ -97,6 +97,9 @@ class AccountDropdown extends Component {
                 <Button color="primary" fullWidth href="/signup">
                   Create Account
                 </Button>
+                <Button color="primary" fullWidth href="/signup/shop">
+                  Create Shop
+                </Button>
               </Fragment>
             }
           </div>

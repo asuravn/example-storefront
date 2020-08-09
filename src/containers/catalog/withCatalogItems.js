@@ -5,6 +5,7 @@ import { Query } from "react-apollo";
 import hoistNonReactStatic from "hoist-non-react-statics";
 import { pagination, paginationVariablesFromUrlParams } from "lib/utils/pagination";
 import withTag from "containers/tags/withTag";
+import withMerchantShop from "containers/shop/withMerchantShop";
 import catalogItemsQuery from "./catalogItems.gql";
 
 /**
@@ -15,12 +16,14 @@ import catalogItemsQuery from "./catalogItems.gql";
  */
 export default function withCatalogItems(Component) {
   @withTag
+  @withMerchantShop
   @inject("primaryShopId", "routingStore", "uiStore")
   @observer
   class CatalogItems extends React.Component {
     static propTypes = {
       primaryShopId: PropTypes.string,
       routingStore: PropTypes.object.isRequired,
+      merchant: PropTypes.object,
       tag: PropTypes.shape({
         _id: PropTypes.string.isRequired
       }),
@@ -28,9 +31,10 @@ export default function withCatalogItems(Component) {
     };
 
     render() {
-      const { primaryShopId, routingStore, uiStore, tag } = this.props;
+      const { primaryShopId, routingStore, uiStore, tag, merchant } = this.props;
       const [sortBy, sortOrder] = uiStore.sortBy.split("-");
       const tagIds = tag && [tag._id];
+      const shopIds = merchant && [merchant._id];
 
       if (!primaryShopId) {
         return (
@@ -41,7 +45,7 @@ export default function withCatalogItems(Component) {
       }
 
       const variables = {
-        shopId: primaryShopId,
+        shopIds,
         ...paginationVariablesFromUrlParams(routingStore.query, { defaultPageLimit: uiStore.pageSize }),
         tagIds,
         sortBy,

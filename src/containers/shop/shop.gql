@@ -1,5 +1,5 @@
-query shopQuery($shopId: ID!) {
-  shop(id: $shopId) {
+query shopQuery($shopSlug: String!) {
+  shopBySlug(slug: $shopSlug) {
     _id
     description
     name

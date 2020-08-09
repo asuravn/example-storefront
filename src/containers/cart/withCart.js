@@ -353,8 +353,10 @@ export default function withCart(Component) {
 
       // Update fulfillment options for current cart
       const { data: { setShippingAddressOnCart: { cart } } } = response;
-      this.handleUpdateFulfillmentOptionsForGroup(cart.checkout.fulfillmentGroups[0]._id);
-
+      cart.checkout.fulfillmentGroups.map(group => {
+        this.handleUpdateFulfillmentOptionsForGroup(group._id);
+      });
+      
       return response;
     }
 

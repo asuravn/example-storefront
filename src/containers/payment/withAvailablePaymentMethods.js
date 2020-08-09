@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Query, withApollo } from "react-apollo";
 import hoistNonReactStatic from "hoist-non-react-statics";
 import { availablePaymentMethods as availablePaymentMethodsQuery } from "./queries.gql";
+import {inject} from "mobx-react";
 
 /**
  * withAvailablePaymentMethods higher order query component for fetching an order
@@ -12,8 +13,10 @@ import { availablePaymentMethods as availablePaymentMethodsQuery } from "./queri
  */
 export default function withAvailablePaymentMethods(Component) {
   @withApollo
+  @inject("primaryShopId" )
   class WithAvailablePaymentMethods extends React.Component {
     static propTypes = {
+      primaryShopId: PropTypes.string.isRequired,
       cart: PropTypes.shape({
         shop: PropTypes.shape({
           _id: PropTypes.string.isRequired
@@ -22,10 +25,10 @@ export default function withAvailablePaymentMethods(Component) {
     }
 
     render() {
-      const { cart } = this.props;
+      const { cart, primaryShopId } = this.props;
 
       const isReadyToLoad = !!cart;
-      const variables = { shopId: cart && cart.shop._id };
+      const variables = { shopId: primaryShopId };
 
       return (
         <Query errorPolicy="all" query={availablePaymentMethodsQuery} variables={variables} skip={!isReadyToLoad}>

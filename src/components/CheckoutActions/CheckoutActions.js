@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Fragment, Component } from "react";
 import PropTypes from "prop-types";
-import { isEqual } from "lodash";
+import { isEqual, get } from "lodash";
 import { observer } from "mobx-react";
 import styled from "styled-components";
 import Actions from "@reactioncommerce/components/CheckoutActions/v1";
@@ -169,11 +169,11 @@ export default class CheckoutActions extends Component {
     this.setState({ actionAlerts: { 1: shippingAlert } });
   }
 
-  setShippingMethod = async (shippingMethod) => {
+  setShippingMethod = async (group, shippingMethod) => {
     const { checkoutMutations: { onSetFulfillmentOption } } = this.props;
     const { checkout: { fulfillmentGroups } } = this.props.cart;
     const fulfillmentOption = {
-      fulfillmentGroupId: fulfillmentGroups[0]._id,
+      fulfillmentGroupId: group._id,
       fulfillmentMethodId: shippingMethod.selectedFulfillmentOption.fulfillmentMethod._id
     };
 
@@ -216,8 +216,7 @@ export default class CheckoutActions extends Component {
     const fulfillmentGroups = checkout.fulfillmentGroups.map((group) => {
       const { data } = group;
       const { selectedFulfillmentOption } = group;
-
-      const items = cart.items.map((item) => ({
+      const items = group.items.map(item => ({
         addedAt: item.addedAt,
         price: item.price.amount,
         productConfiguration: item.productConfiguration,
@@ -246,10 +245,11 @@ export default class CheckoutActions extends Component {
   };
 
   placeOrder = async (order) => {
-    const { cartStore, clearAuthenticatedUsersCart, client: apolloClient } = this.props;
-
+    const { cartStore, clearAuthenticatedUsersCart, client: apolloClient, cart } = this.props;
+    const { checkout } = cart;
     // Payments can have `null` amount to mean "remaining".
-    let remainingAmountDue = order.fulfillmentGroups.reduce((sum, group) => sum + group.totalPrice, 0);
+    // let remainingAmountDue = order.fulfillmentGroups.reduce((sum, group) => sum + group.totalPrice, 0);
+    let remainingAmountDue = checkout.summary.total.amount;
     const payments = cartStore.checkoutPayments.map(({ payment }) => {
       const amount = payment.amount ? Math.min(payment.amount, remainingAmountDue) : remainingAmountDue;
       remainingAmountDue -= amount;
@@ -323,7 +323,6 @@ export default class CheckoutActions extends Component {
     const { checkout: { fulfillmentGroups, summary }, items } = cart;
     const { actionAlerts, hasPaymentError } = this.state;
     const [fulfillmentGroup] = fulfillmentGroups;
-
     // Order summary
     const { fulfillmentTotal, itemTotal, surchargeTotal, taxTotal, total } = summary;
     const checkoutSummary = {
@@ -347,7 +346,21 @@ export default class CheckoutActions extends Component {
     if (!Array.isArray(paymentMethods) || paymentMethods.length === 0) {
       PaymentComponent = NoPaymentMethodsMessage;
     }
-
+    const fullfillActions = fulfillmentGroups.map((group, index) => {
+      return {
+        id: "2." + index,
+        activeLabel: "Choose a shipping method - " + get(group, 'shop.name'),
+        completeLabel: "Shipping method - " + get(group, 'shop.name'),
+        incompleteLabel: "Shipping method - " + get(group, 'shop.name'),
+        status: group.selectedFulfillmentOption ? "complete" : "incomplete",
+        component: FulfillmentOptionsCheckoutAction,
+        onSubmit: shippingMethod => this.setShippingMethod(group, shippingMethod),
+        props: {
+          alert: actionAlerts["2"],
+          fulfillmentGroup: group
+        }
+      }
+    });
     const actions = [
       {
         id: "1",
@@ -364,19 +377,7 @@ export default class CheckoutActions extends Component {
           onAddressValidation: addressValidation
         }
       },
-      {
-        id: "2",
-        activeLabel: "Choose a shipping method",
-        completeLabel: "Shipping method",
-        incompleteLabel: "Shipping method",
-        status: fulfillmentGroup.selectedFulfillmentOption ? "complete" : "incomplete",
-        component: FulfillmentOptionsCheckoutAction,
-        onSubmit: this.setShippingMethod,
-        props: {
-          alert: actionAlerts["2"],
-          fulfillmentGroup
-        }
-      },
+      ...fullfillActions,
       {
         id: "3",
         activeLabel: "Enter payment information",

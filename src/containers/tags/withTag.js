@@ -29,7 +29,7 @@ export default function withTag(Component) {
     render() {
       const {
         primaryShopId,
-        router: { query: { slug: slugFromQueryParam } },
+        router: { query: { tagSlug: slugFromQueryParam } },
         routingStore: { tagId }
       } = this.props;
 

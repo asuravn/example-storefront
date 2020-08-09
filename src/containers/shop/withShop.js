@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Query } from "react-apollo";
-import { inject, Provider } from "mobx-react";
+import {inject, observer, Provider} from "mobx-react";
 import hoistNonReactStatic from "hoist-non-react-statics";
 import primaryShopQuery from "../common-gql/primaryShop.gql";
 
