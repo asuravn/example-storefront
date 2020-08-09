@@ -1,0 +1,22 @@
+query publicShopsQuery {
+  publicShops {
+    totalCount
+    pageInfo {
+      endCursor
+      startCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    edges {
+      cursor
+      node {
+        _id
+        name
+        shopLogoUrls {
+          primaryShopLogoUrl
+        }
+        slug
+      }
+    }
+  }
+}
