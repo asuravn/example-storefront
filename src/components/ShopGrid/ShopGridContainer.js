@@ -131,7 +131,7 @@ class ShopGridContainer extends Component {
     const gridItemProps = {
       currencyCode,
       placeholderImageURL,
-      onClick: onItemClick
+      onClick: onItemClick,
     };
     
     if (badgeLabels) {
@@ -143,7 +143,7 @@ class ShopGridContainer extends Component {
           <GridContainer>
             {shops.map((shop, index) => (
               <GridItem containerParams={params} key={`grid-item-${index}`} {...this.props}>
-                <ShopGridItem shop={shop.node || {}} {...gridItemProps} />
+                <ShopGridItem shop={shop.node || {}} {...gridItemProps}  />
               </GridItem>
             ))}
           </GridContainer>

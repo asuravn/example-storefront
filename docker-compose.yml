@@ -15,7 +15,7 @@ services:
   web:
     image: reactioncommerce/example-storefront:3.1.0
     env_file:
-      - ./.env
+      - ./.env.local
     networks:
       default:
       reaction:

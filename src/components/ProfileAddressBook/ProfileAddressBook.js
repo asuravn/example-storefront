@@ -63,7 +63,7 @@ class ProfileAddressBook extends Component {
   render() {
     const { authStore: { account }, classes, shop } = this.props;
 
-    if (account && !account._id) return <ErrorPage shop={shop} subtitle="Not Found" />;
+    // if (account && !account._id) return <ErrorPage shop={shop} subtitle="Not Found" />;
 
     return (
       <Grid className={classes.profileAddressBookContainer} container>

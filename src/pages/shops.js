@@ -41,12 +41,6 @@ class ShopsPage extends Component {
     routingStore.setTagId(null);
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.shops !== prevProps.shops) {
-      this.trackEvent(this.props);
-    }
-  }
-
   setPageSize = (pageSize) => {
     this.props.routingStore.setSearch({ limit: pageSize });
     this.props.uiStore.setPageSize(pageSize);

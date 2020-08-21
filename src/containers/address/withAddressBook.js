@@ -68,12 +68,16 @@ export default function withAddressBook(Comp) {
             if (newAddressEntry) {
               const cacheData = cache.readQuery({ query: viewerQuery });
               if (!cacheData.viewer.addressBook) {
-                cacheData.viewer.addressBook = { edges: [] };
+                cacheData.viewer.addressBook = { edges: [], __typename: 'AddressConnection' };
               }
               cacheData.viewer.addressBook.edges.push({
                 __typename: "AddressEdge",
-                node: newAddressEntry
+                node: {
+                  ...newAddressEntry,
+                  __typename: "Address",
+                }
               });
+              console.log(cacheData);
               // Update Apollo cache
               cache.writeQuery({
                 query: viewerQuery,

@@ -10,9 +10,9 @@
 export default {
   // This is an example. Uncomment these lines to change the color of all buttons with the "important" action type.
   // Go to /cart with an empty cart to see this change on the "Continue shopping" button
-  // "rui_components": {
-  //   "Button": {
-  //     "backgroundColor_important": "#20427B"
-  //   }
-  // }
+  "rui_components": {
+    "ShopLogo": {
+      "height": "50px"
+    }
+  }
 };

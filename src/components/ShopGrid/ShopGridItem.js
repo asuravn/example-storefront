@@ -148,7 +148,7 @@ class ShopGridItem extends Component {
   }
   
   get primaryImage() {
-    const { shopLogoUrls, placeholderImageURL } = this.props;
+    const { shop: {shopLogoUrls}, placeholderImageURL } = this.props;
     if (!shopLogoUrls || !shopLogoUrls.primaryShopLogoUrl) {
       return {
         URLs: {

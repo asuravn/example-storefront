@@ -43,7 +43,7 @@ export default function withOrder(Component) {
       const variables = {
         id: routingStore.query.orderId,
         language: uiStore.language,
-        shopId: primaryShopId,
+        shopId: null,
         token: routingStore.query.token || null
       };
 
