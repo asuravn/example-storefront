@@ -198,7 +198,8 @@ _**NOTE:** This is not the way to run the app in actual production deployment. T
 To stop the Docker container after starting it with the above command, use:
 
 ```sh
-docker stop reaction-storefront
+docker stop storefront
+docker rm storefront
 ```
 
 ## Contribute

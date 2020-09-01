@@ -39,13 +39,16 @@ export default function withOrder(Component) {
 
     render() {
       const { primaryShopId, routingStore, uiStore } = this.props;
-
       const variables = {
         id: routingStore.query.orderId,
         language: uiStore.language,
-        shopId: null,
+        shopId: primaryShopId,
         token: routingStore.query.token || null
       };
+  
+      if (!primaryShopId) {
+        return <Component {...this.props} />;
+      }
 
       return (
         <Query errorPolicy="all" query={orderByReferenceId} variables={variables}>
